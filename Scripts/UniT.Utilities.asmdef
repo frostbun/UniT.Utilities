@@ -1,0 +1,7 @@
+﻿{
+  "name": "UniT.Utilities",
+  "rootNamespace": "UniT.Utilities",
+  "references": [
+    "UniT.Extensions"
+  ]
+}
