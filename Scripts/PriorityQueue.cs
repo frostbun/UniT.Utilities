@@ -4,9 +4,9 @@ namespace UniT.Utilities
     using System;
     using System.Collections.Generic;
 
-    public class PriorityQueue<TElement, TPriority>
+    public class PriorityQueue<TItem, TPriority>
     {
-        private readonly SortedList<TPriority, TElement> items;
+        private readonly SortedList<TPriority, TItem> items;
 
         public PriorityQueue() : this(Comparer<TPriority>.Default)
         {
@@ -18,7 +18,7 @@ namespace UniT.Utilities
 
         public PriorityQueue(IComparer<TPriority> comparer)
         {
-            this.items = new SortedList<TPriority, TElement>(Comparer<TPriority>.Create((i1, i2) =>
+            this.items = new SortedList<TPriority, TItem>(Comparer<TPriority>.Create((i1, i2) =>
             {
                 var result = comparer.Compare(i1, i2);
                 return result != 0 ? result : 1;
@@ -27,21 +27,26 @@ namespace UniT.Utilities
 
         public int Count => this.items.Count;
 
-        public void Enqueue(TElement element, TPriority priority)
+        public void Enqueue(TItem element, TPriority priority)
         {
             this.items.Add(priority, element);
         }
 
-        public TElement Dequeue()
+        public TItem Dequeue()
         {
-            var result = this.items.Values[this.items.Count - 1];
+            var result = this.Peek();
             this.items.RemoveAt(this.items.Count - 1);
             return result;
         }
 
-        public TElement Peek()
+        public TItem Peek()
         {
             return this.items.Values[this.items.Count - 1];
+        }
+
+        public void Clear()
+        {
+            this.items.Clear();
         }
     }
 }
