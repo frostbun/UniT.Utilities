@@ -2,15 +2,12 @@
   "name": "com.frostbun.unit.utilities",
   "displayName": "UniT Utilities",
   "description": "Utility classes for Unity",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "unity": "2022.3",
   "license": "MIT",
   "author": {
     "name": "frostbun",
     "email": "manhnb1911@gmail.com",
     "url": "https://github.com/frostbun"
-  },
-  "dependencies": {
-    "com.frostbun.unit.extensions": "1.0.15"
   }
 }

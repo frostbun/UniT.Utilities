@@ -5,7 +5,6 @@ namespace UniT.Utilities
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using UniT.Extensions;
     using UnityEngine;
 
     [Serializable]
@@ -15,17 +14,20 @@ namespace UniT.Utilities
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            this.keyValuePairs = this.Select((key, value) => new KeyValuePair(key, value)).ToArray();
+            this.keyValuePairs = this.Select(kv => new KeyValuePair(kv.Key, kv.Value)).ToArray();
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             this.Clear();
-            this.keyValuePairs.ForEach(pair => this.Add(pair.Key, pair.Value));
+            foreach (var kv in this.keyValuePairs)
+            {
+                this.Add(kv.Key, kv.Value);
+            }
         }
 
         [Serializable]
-        private sealed class KeyValuePair
+        private struct KeyValuePair
         {
             [field: SerializeField] public TKey   Key   { get; private set; }
             [field: SerializeField] public TValue Value { get; private set; }
