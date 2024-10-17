@@ -21,7 +21,7 @@ namespace UniT.Utilities
             this.items = new SortedList<TPriority, TItem>(Comparer<TPriority>.Create((i1, i2) =>
             {
                 var result = comparer.Compare(i1, i2);
-                return result != 0 ? result : 1;
+                return result is 0 ? 1 : result;
             }));
         }
 
