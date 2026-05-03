@@ -1,1 +1,1 @@
-# Utility classes for Unity
+# Utilities for Unity Editor
