@@ -12,72 +12,63 @@ namespace UniT.Utilities.Editor
     {
         private const string ELEMENT_PATH = "Scene Selector";
 
+        private static string[] ScenePaths;
+
         static SceneSelector()
         {
-            RefreshSceneList();
-            EditorApplication.projectChanged                += RefreshSceneList;
+            ScenePaths = Directory.GetFiles("Assets", "*.unity", SearchOption.AllDirectories);
+
+            EditorApplication.projectChanged                += OnProjectChanged;
             EditorApplication.playModeStateChanged          += OnPlayModeStateChanged;
             SceneManager.activeSceneChanged                 += OnSceneChanged;
             EditorSceneManager.activeSceneChangedInEditMode += OnSceneChanged;
         }
 
-        private static string[] ScenePaths = null!;
-
-        [MainToolbarElement(ELEMENT_PATH, defaultDockPosition = MainToolbarDockPosition.Right)]
+        [MainToolbarElement(ELEMENT_PATH)]
         private static MainToolbarElement CreateSceneSelectorDropdown()
         {
-            var icon = (Texture2D)EditorGUIUtility.IconContent("UnityLogo").image;
+            var currentScene = SceneManager.GetActiveScene().name;
+            var icon         = (Texture2D)EditorGUIUtility.IconContent("UnityLogo").image;
             return Application.isPlaying || ScenePaths.Length == 0
-                ? new MainToolbarLabel(new(SceneManager.GetActiveScene().name, icon, "Select active scene"))
-                : new MainToolbarDropdown(new(EditorSceneManager.GetActiveScene().name, icon, "Select active scene"), dropDownRect =>
+                ? new MainToolbarLabel(new(currentScene, icon, "Select active scene"))
+                : new MainToolbarDropdown(new(currentScene, icon, "Select active scene"), dropDownRect =>
                 {
                     var menu = new GenericMenu();
                     foreach (var path in ScenePaths)
                     {
-                        menu.AddItem(new(Path.GetFileNameWithoutExtension(path)), false, () =>
+                        var scene = Path.GetFileNameWithoutExtension(path);
+                        if (scene == currentScene)
                         {
-                            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                            menu.AddDisabledItem(new(scene), true);
+                        }
+                        else
+                        {
+                            menu.AddItem(new(scene), false, () =>
                             {
+                                if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
                                 EditorSceneManager.OpenScene(path);
-                            }
-                        });
+                            });
+                        }
                     }
                     menu.DropDown(dropDownRect);
                 });
         }
 
+        private static void OnProjectChanged()
+        {
+            ScenePaths = Directory.GetFiles("Assets", "*.unity", SearchOption.AllDirectories);
+            MainToolbar.Refresh(ELEMENT_PATH);
+        }
+
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
             if (state is PlayModeStateChange.ExitingEditMode or PlayModeStateChange.ExitingPlayMode) return;
-            RefreshElement();
+            MainToolbar.Refresh(ELEMENT_PATH);
         }
 
         private static void OnSceneChanged(Scene oldScene, Scene newScene)
         {
-            RefreshElement();
-        }
-
-        private static void RefreshSceneList()
-        {
-            ScenePaths = Directory.GetFiles("Assets", "*.unity", SearchOption.AllDirectories);
-        }
-
-        public static void RefreshElement()
-        {
             MainToolbar.Refresh(ELEMENT_PATH);
-        }
-    }
-
-    internal sealed class SceneWatcher : AssetPostprocessor
-    {
-        private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-        {
-            foreach (var path in movedAssets)
-            {
-                if (!path.EndsWith(".unity")) continue;
-                SceneSelector.RefreshElement();
-                return;
-            }
         }
     }
 }
