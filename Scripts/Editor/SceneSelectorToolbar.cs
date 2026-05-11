@@ -8,13 +8,13 @@ namespace UniT.Utilities.Editor
     using UnityEngine;
     using UnityEngine.SceneManagement;
 
-    internal static class SceneSelector
+    internal static class SceneSelectorToolbar
     {
         private const string ELEMENT_PATH = "Scene Selector";
 
         private static string[] ScenePaths;
 
-        static SceneSelector()
+        static SceneSelectorToolbar()
         {
             ScenePaths = Directory.GetFiles("Assets", "*.unity", SearchOption.AllDirectories);
 

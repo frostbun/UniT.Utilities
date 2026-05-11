@@ -1,9 +1,10 @@
 {
   "name": "UniT.Utilities.Editor",
   "rootNamespace": "UniT.Utilities.Editor",
+  "references": [
+    "UniT.Extensions"
+  ],
   "includePlatforms": [
     "Editor"
-  ],
-  "references": [
   ]
 }
