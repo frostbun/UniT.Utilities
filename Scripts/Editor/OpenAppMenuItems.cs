@@ -36,7 +36,7 @@ namespace UniT.Utilities.Editor
                 FileName  = "xdg-terminal-exec",
                 Arguments = "opencode",
                 #else
-                FileName = "alacritty",
+                FileName  = "alacritty",
                 Arguments = "-e opencode",
                 #endif
             });
