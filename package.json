@@ -2,15 +2,12 @@
   "name": "com.frostbun.unit.utilities",
   "displayName": "UniT Utilities",
   "description": "Utilities for Unity Editor",
-  "version": "2.0.0",
-  "unity": "2022.3",
+  "version": "3.0.0",
+  "unity": "6.3",
   "license": "MIT",
   "author": {
     "name": "frostbun",
     "email": "manhnb1911@gmail.com",
     "url": "https://github.com/frostbun"
-  },
-  "dependencies": {
-    "com.frostbun.unit.extensions": "2.0.0"
   }
 }

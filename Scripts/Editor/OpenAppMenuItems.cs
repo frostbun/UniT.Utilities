@@ -4,7 +4,6 @@ namespace UniT.Utilities.Editor
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using UniT.Extensions;
     using UnityEditor;
 
     internal static class OpenAppMenuItems
@@ -58,16 +57,16 @@ namespace UniT.Utilities.Editor
 
         private static bool AppExist(string name)
         {
-            return AppExistCache.GetOrAdd(name, name =>
+            if (AppExistCache.TryGetValue(name, out var exist)) return exist;
+            using var process = Process.Start(new ProcessStartInfo
             {
-                using var process = Process.Start(new ProcessStartInfo
-                {
-                    FileName  = "which",
-                    Arguments = name,
-                })!;
-                process.WaitForExit();
-                return process.ExitCode == 0;
-            });
+                FileName  = "which",
+                Arguments = name,
+            })!;
+            process.WaitForExit();
+            exist = process.ExitCode is 0;
+            AppExistCache.Add(name, exist);
+            return exist;
         }
 
         private static string GetSelectedFolder()
