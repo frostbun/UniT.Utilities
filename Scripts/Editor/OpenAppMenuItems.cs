@@ -8,10 +8,12 @@ namespace UniT.Utilities.Editor
 
     internal static class OpenAppMenuItems
     {
-        private const string OpenTerminalHerePath = "Assets/Open Terminal Here";
-        private const string OpenOpenCodePath     = "Assets/Open OpenCode";
+        private const string RootPath             = "Assets/UniT/";
+        private const string OpenTerminalHerePath = RootPath + "Open Terminal Here";
+        private const string OpenOpenCodePath     = RootPath + "Open OpenCode";
+        private const string OpenLazyGitPath      = RootPath + "Open LazyGit";
 
-        [MenuItem(OpenTerminalHerePath)]
+        [MenuItem(OpenTerminalHerePath, priority = 1000)]
         private static void OpenTerminalHereMenuItem()
         {
             AppExist("xdg-terminal-exec");
@@ -26,7 +28,22 @@ namespace UniT.Utilities.Editor
             });
         }
 
-        [MenuItem(OpenOpenCodePath)]
+        [MenuItem(OpenLazyGitPath, priority = 1001)]
+        private static void OpenLazyGitMenuItem()
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                #if UNITY_EDITOR_LINUX
+                FileName  = "xdg-terminal-exec",
+                Arguments = "lazygit",
+                #else
+                FileName  = "alacritty",
+                Arguments = "-e lazygit",
+                #endif
+            });
+        }
+
+        [MenuItem(OpenOpenCodePath, priority = 1002)]
         private static void OpenOpenCodeMenuItem()
         {
             Process.Start(new ProcessStartInfo
@@ -49,6 +66,9 @@ namespace UniT.Utilities.Editor
             "alacritty"
             #endif
         );
+
+        [MenuItem(OpenLazyGitPath, isValidateFunction: true)]
+        private static bool LazyGitExist() => TerminalExist() && AppExist("lazygit");
 
         [MenuItem(OpenOpenCodePath, isValidateFunction: true)]
         private static bool OpenCodeExist() => TerminalExist() && AppExist("opencode");
