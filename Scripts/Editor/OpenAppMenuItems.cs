@@ -8,12 +8,12 @@ namespace UniT.Utilities.Editor
 
     internal static class OpenAppMenuItems
     {
-        private const string RootPath             = "Assets/UniT/";
-        private const string OpenTerminalHerePath = RootPath + "Open Terminal Here";
-        private const string OpenOpenCodePath     = RootPath + "Open OpenCode";
-        private const string OpenLazyGitPath      = RootPath + "Open LazyGit";
+        private const string ROOT_PATH               = "Assets/UniT/";
+        private const string OPEN_TERMINAL_HERE_PATH = ROOT_PATH + "Open Terminal Here";
+        private const string OPEN_OPENCODE_PATH      = ROOT_PATH + "Open OpenCode";
+        private const string OPEN_LAZYGIT_PATH       = ROOT_PATH + "Open LazyGit";
 
-        [MenuItem(OpenTerminalHerePath, priority = 1000)]
+        [MenuItem(OPEN_TERMINAL_HERE_PATH, priority = 1000)]
         private static void OpenTerminalHereMenuItem()
         {
             AppExist("xdg-terminal-exec");
@@ -28,7 +28,7 @@ namespace UniT.Utilities.Editor
             });
         }
 
-        [MenuItem(OpenLazyGitPath, priority = 1001)]
+        [MenuItem(OPEN_LAZYGIT_PATH, priority = 1001)]
         private static void OpenLazyGitMenuItem()
         {
             Process.Start(new ProcessStartInfo
@@ -43,7 +43,7 @@ namespace UniT.Utilities.Editor
             });
         }
 
-        [MenuItem(OpenOpenCodePath, priority = 1002)]
+        [MenuItem(OPEN_OPENCODE_PATH, priority = 1002)]
         private static void OpenOpenCodeMenuItem()
         {
             Process.Start(new ProcessStartInfo
@@ -58,7 +58,7 @@ namespace UniT.Utilities.Editor
             });
         }
 
-        [MenuItem(OpenTerminalHerePath, isValidateFunction: true)]
+        [MenuItem(OPEN_TERMINAL_HERE_PATH, isValidateFunction: true)]
         private static bool TerminalExist() => AppExist(
             #if UNITY_EDITOR_LINUX
             "xdg-terminal-exec"
@@ -67,10 +67,10 @@ namespace UniT.Utilities.Editor
             #endif
         );
 
-        [MenuItem(OpenLazyGitPath, isValidateFunction: true)]
+        [MenuItem(OPEN_LAZYGIT_PATH, isValidateFunction: true)]
         private static bool LazyGitExist() => TerminalExist() && AppExist("lazygit");
 
-        [MenuItem(OpenOpenCodePath, isValidateFunction: true)]
+        [MenuItem(OPEN_OPENCODE_PATH, isValidateFunction: true)]
         private static bool OpenCodeExist() => TerminalExist() && AppExist("opencode");
 
         private static readonly Dictionary<string, bool> AppExistCache = new();
