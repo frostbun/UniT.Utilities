@@ -5,21 +5,28 @@ namespace UniT.Utilities.Editor
     using System.Diagnostics;
     using System.IO;
     using UnityEditor;
-    using UnityEngine;
 
     internal static class OpenAppMenuItems
     {
         private const string ROOT_PATH               = "Assets/UniT/";
         private const string OPEN_TERMINAL_HERE_PATH = ROOT_PATH + "Open Terminal Here";
-        private const string OPEN_OPENCODE_PATH      = ROOT_PATH + "Open OpenCode";
         private const string OPEN_LAZYGIT_PATH       = ROOT_PATH + "Open LazyGit";
+        private const string OPEN_OPENCODE_PATH      = ROOT_PATH + "Open OpenCode";
+
+        #if UNITY_EDITOR_LINUX
+        private const string TERMINAL = "xdg-terminal-exec";
+        #else
+        private const string TERMINAL = "alacritty";
+        #endif
+        private const string LAZYGIT  = "lazygit";
+        private const string OPENCODE = "opencode";
 
         [MenuItem(OPEN_TERMINAL_HERE_PATH, priority = 1000)]
         private static void OpenTerminalHereMenuItem()
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName         = TerminalExecutable,
+                FileName         = TERMINAL,
                 WorkingDirectory = GetSelectedFolder(),
             });
         }
@@ -29,8 +36,8 @@ namespace UniT.Utilities.Editor
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName  = TerminalExecutable,
-                Arguments = GetArguments("lazygit"),
+                FileName  = TERMINAL,
+                Arguments = $"-e {LAZYGIT}",
             });
         }
 
@@ -39,27 +46,19 @@ namespace UniT.Utilities.Editor
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName  = TerminalExecutable,
-                Arguments = GetArguments("opencode"),
+                FileName  = TERMINAL,
+                Arguments = $"-e {OPENCODE}",
             });
         }
 
         [MenuItem(OPEN_TERMINAL_HERE_PATH, isValidateFunction: true)]
-        private static bool TerminalExist() => AppExist(TerminalExecutable);
+        private static bool TerminalExist() => AppExist(TERMINAL);
 
         [MenuItem(OPEN_LAZYGIT_PATH, isValidateFunction: true)]
-        private static bool LazyGitExist() => TerminalExist() && AppExist("lazygit");
+        private static bool LazyGitExist() => TerminalExist() && AppExist(LAZYGIT);
 
         [MenuItem(OPEN_OPENCODE_PATH, isValidateFunction: true)]
-        private static bool OpenCodeExist() => TerminalExist() && AppExist("opencode");
-
-        private static readonly string TerminalExecutable = Application.platform is RuntimePlatform.LinuxEditor
-            ? "xdg-terminal-exec"
-            : "alacritty";
-
-        private static string GetArguments(string appName) => Application.platform is RuntimePlatform.LinuxEditor
-            ? appName
-            : $"-e {appName}";
+        private static bool OpenCodeExist() => TerminalExist() && AppExist(OPENCODE);
 
         private static readonly Dictionary<string, bool> AppExistCache = new();
 
