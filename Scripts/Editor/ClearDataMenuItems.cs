@@ -19,14 +19,14 @@ namespace UniT.Utilities.Editor
         private static void ClearPersistentDataPathMenuItem()
         {
             if (!Confirm(CLEAR_PERSISTENT_DATA_PATH)) return;
-            Directory.Delete(PersistentDataPath, recursive: true);
+            if (Directory.Exists(PersistentDataPath)) Directory.Delete(PersistentDataPath, recursive: true);
         }
 
         [MenuItem(ROOT_PATH + CLEAR_TEMPORARY_CACHE_PATH, priority = 15002)]
-        private static void OpenLazyGitMenuItem()
+        private static void ClearTemporaryCachePathMenuItem()
         {
             if (!Confirm(CLEAR_TEMPORARY_CACHE_PATH)) return;
-            Directory.Delete(TemporaryCachePath, recursive: true);
+            if (Directory.Exists(TemporaryCachePath)) Directory.Delete(TemporaryCachePath, recursive: true);
         }
 
         [MenuItem(ROOT_PATH + CLEAR_EVERYTHING, priority = 15003)]
@@ -34,8 +34,8 @@ namespace UniT.Utilities.Editor
         {
             if (!Confirm(CLEAR_EVERYTHING)) return;
             PlayerPrefs.DeleteAll();
-            Directory.Delete(PersistentDataPath, recursive: true);
-            Directory.Delete(TemporaryCachePath, recursive: true);
+            if (Directory.Exists(PersistentDataPath)) Directory.Delete(PersistentDataPath, recursive: true);
+            if (Directory.Exists(TemporaryCachePath)) Directory.Delete(TemporaryCachePath, recursive: true);
         }
 
         private static bool Confirm(string action)
